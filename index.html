@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>현대힘스 포항공장부 MSDS</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Malgun Gothic", Arial, sans-serif;
+      background: #f4f7f9;
+      color: #1f2937;
+    }
+    .header {
+      background: #0f3d75;
+      color: white;
+      padding: 24px 16px;
+      text-align: center;
+    }
+    .header h1 {
+      margin: 0 0 8px 0;
+      font-size: 28px;
+    }
+    .header p {
+      margin: 0;
+      font-size: 15px;
+    }
+    .wrap {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    .search-box {
+      background: white;
+      padding: 16px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    .search-box label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: bold;
+    }
+    .search-box input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+    .category-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+    }
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      border-top: 5px solid #0f766e;
+    }
+    .card h3 {
+      margin: 0 0 8px 0;
+    }
+    .section {
+      display: none;
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      margin-top: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    .section h2 {
+      margin-top: 0;
+    }
+    .back-btn {
+      display: inline-block;
+      margin-bottom: 16px;
+      background: #0f766e;
+      color: white;
+      border: none;
+      padding: 10px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .file-list a {
+      display: block;
+      text-decoration: none;
+      color: #111827;
+      background: #f8fafc;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 10px;
+    }
+    .file-list a:hover {
+      background: #eef6ff;
+    }
+    .hidden {
+      display: none !important;
+    }
+    .empty {
+      display: none;
+      padding: 16px;
+      margin-top: 16px;
+      background: #fff7ed;
+      border: 1px solid #fdba74;
+      border-radius: 10px;
+      color: #9a3412;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>현대힘스 포항공장부 MSDS</h1>
+    <p>원하는 MSDS를 검색하여 확인하세요</p>
+  </div>
+
+  <div class="wrap">
+    <div class="search-box">
+      <label for="searchInput">MSDS 검색 (한글 + 영문)</label>
+      <input type="text" id="searchInput" placeholder="예: 에틸렌, Ethylene">
+    </div>
+
+    <div id="mainMenu">
+      <div class="category-grid">
+        <div class="card" onclick="showSection('paint')">
+          <h3>도료 MSDS</h3>
+          <p>도료 관련 MSDS 목록</p>
+        </div>
+        <div class="card" onclick="showSection('welding')">
+          <h3>용접재 MSDS</h3>
+          <p>용접재 관련 MSDS 목록</p>
+        </div>
+        <div class="card" onclick="showSection('etc')">
+          <h3>그외 MSDS</h3>
+          <p>기타 MSDS 목록</p>
+        </div>
+      </div>
+    </div>
+
+    <div id="paint" class="section">
+      <button class="back-btn" onclick="goHome()">← 목록으로</button>
+      <h2>도료 MSDS</h2>
+      <div class="file-list">
+        <a href="paint/ethylene_msds.pdf" target="_blank" class="item" data-name="에틸렌 ethylene">에틸렌_MSDS</a>
+      </div>
+    </div>
+
+    <div id="welding" class="section">
+      <button class="back-btn" onclick="goHome()">← 목록으로</button>
+      <h2>용접재 MSDS</h2>
+      <div class="file-list">
+        <a href="welding/ethylene_msds.pdf" target="_blank" class="item" data-name="에틸렌 ethylene">에틸렌_MSDS</a>
+      </div>
+    </div>
+
+    <div id="etc" class="section">
+      <button class="back-btn" onclick="goHome()">← 목록으로</button>
+      <h2>그외 MSDS</h2>
+      <div class="file-list">
+        <a href="etc/ethylene_msds.pdf" target="_blank" class="item" data-name="에틸렌 ethylene">에틸렌_MSDS</a>
+      </div>
+    </div>
+
+    <div id="emptyMsg" class="empty">검색 결과가 없습니다.</div>
+  </div>
+
+  <script>
+    const sections = ["paint", "welding", "etc"];
+    const searchInput = document.getElementById("searchInput");
+    const items = Array.from(document.querySelectorAll(".item"));
+    const mainMenu = document.getElementById("mainMenu");
+    const emptyMsg = document.getElementById("emptyMsg");
+
+    function showSection(id) {
+      mainMenu.style.display = "none";
+      sections.forEach(sectionId => {
+        document.getElementById(sectionId).style.display = (sectionId === id) ? "block" : "none";
+      });
+      runSearch();
+    }
+
+    function goHome() {
+      sections.forEach(sectionId => {
+        document.getElementById(sectionId).style.display = "none";
+      });
+      mainMenu.style.display = "block";
+      emptyMsg.style.display = "none";
+      searchInput.value = "";
+      items.forEach(item => item.classList.remove("hidden"));
+    }
+
+    function runSearch() {
+      const q = searchInput.value.trim().toLowerCase();
+      let visibleCount = 0;
+
+      items.forEach(item => {
+        const name = item.dataset.name.toLowerCase();
+        const match = name.includes(q);
+        if (match) {
+          item.classList.remove("hidden");
+          visibleCount++;
+        } else {
+          item.classList.add("hidden");
+        }
+      });
+
+      sections.forEach(sectionId => {
+        const section = document.getElementById(sectionId);
+        const visibleItems = section.querySelectorAll(".item:not(.hidden)");
+        if (mainMenu.style.display === "none") {
+          section.style.display = visibleItems.length > 0 ? "block" : "none";
+        }
+      });
+
+      if (mainMenu.style.display === "none") {
+        emptyMsg.style.display = visibleCount === 0 ? "block" : "none";
+      } else {
+        emptyMsg.style.display = "none";
+      }
+    }
+
+    searchInput.addEventListener("input", function () {
+      const hasQuery = searchInput.value.trim() !== "";
+      if (hasQuery) {
+        mainMenu.style.display = "none";
+        sections.forEach(sectionId => {
+          document.getElementById(sectionId).style.display = "block";
+        });
+      } else {
+        goHome();
+        return;
+      }
+      runSearch();
+    });
+
+    function sortLists() {
+      sections.forEach(sectionId => {
+        const list = document.querySelector("#" + sectionId + " .file-list");
+        const links = Array.from(list.querySelectorAll(".item"));
+        links.sort((a, b) => a.textContent.localeCompare(b.textContent, "ko"));
+        links.forEach(link => list.appendChild(link));
+      });
+    }
+
+    sortLists();
+  </script>
+</body>
+</html>
