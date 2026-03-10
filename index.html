@@ -6,43 +6,53 @@
   <title>현대힘스 포항공장부 MSDS</title>
   <style>
     * { box-sizing: border-box; }
+
     body {
       margin: 0;
       font-family: "Malgun Gothic", Arial, sans-serif;
       background: #f4f7f9;
       color: #1f2937;
     }
+
     .header {
-      background: #0f3d75;
+      background: linear-gradient(135deg, #0f3d75, #14532d);
       color: white;
-      padding: 24px 16px;
+      padding: 26px 16px;
       text-align: center;
     }
+
     .header h1 {
       margin: 0 0 8px 0;
       font-size: 28px;
     }
+
     .header p {
       margin: 0;
       font-size: 15px;
     }
+
     .wrap {
       max-width: 1000px;
       margin: 0 auto;
       padding: 20px;
     }
+
     .search-box {
       background: white;
       padding: 16px;
       border-radius: 12px;
       margin-bottom: 20px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      border-left: 6px solid #0f766e;
     }
+
     .search-box label {
       display: block;
       margin-bottom: 8px;
       font-weight: bold;
+      font-size: 15px;
     }
+
     .search-box input {
       width: 100%;
       padding: 12px;
@@ -50,11 +60,19 @@
       border-radius: 8px;
       font-size: 16px;
     }
+
+    .search-box input:focus {
+      outline: none;
+      border-color: #0f766e;
+      box-shadow: 0 0 0 3px rgba(15,118,110,0.15);
+    }
+
     .category-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
       gap: 16px;
     }
+
     .card {
       background: white;
       border-radius: 12px;
@@ -62,10 +80,25 @@
       cursor: pointer;
       box-shadow: 0 2px 8px rgba(0,0,0,0.08);
       border-top: 5px solid #0f766e;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
     }
+
+    .card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 14px rgba(0,0,0,0.12);
+    }
+
     .card h3 {
       margin: 0 0 8px 0;
+      font-size: 20px;
     }
+
+    .card p {
+      margin: 0;
+      color: #475569;
+      font-size: 14px;
+    }
+
     .section {
       display: none;
       background: white;
@@ -74,9 +107,13 @@
       margin-top: 20px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.08);
     }
+
     .section h2 {
       margin-top: 0;
+      margin-bottom: 16px;
+      font-size: 24px;
     }
+
     .back-btn {
       display: inline-block;
       margin-bottom: 16px;
@@ -86,7 +123,13 @@
       padding: 10px 14px;
       border-radius: 8px;
       cursor: pointer;
+      font-size: 14px;
     }
+
+    .back-btn:hover {
+      background: #115e59;
+    }
+
     .file-list a {
       display: block;
       text-decoration: none;
@@ -94,15 +137,21 @@
       background: #f8fafc;
       border: 1px solid #e5e7eb;
       border-radius: 8px;
-      padding: 12px;
+      padding: 12px 14px;
       margin-bottom: 10px;
+      font-weight: 600;
+      transition: background 0.15s ease, border-color 0.15s ease;
     }
+
     .file-list a:hover {
       background: #eef6ff;
+      border-color: #93c5fd;
     }
+
     .hidden {
       display: none !important;
     }
+
     .empty {
       display: none;
       padding: 16px;
@@ -111,6 +160,25 @@
       border: 1px solid #fdba74;
       border-radius: 10px;
       color: #9a3412;
+      text-align: center;
+      font-weight: 600;
+    }
+
+    .footer {
+      text-align: center;
+      color: #64748b;
+      font-size: 12px;
+      padding: 24px 16px 10px;
+    }
+
+    @media (max-width: 640px) {
+      .header h1 {
+        font-size: 22px;
+      }
+
+      .section h2 {
+        font-size: 20px;
+      }
     }
   </style>
 </head>
@@ -122,20 +190,22 @@
 
   <div class="wrap">
     <div class="search-box">
-      <label for="searchInput">MSDS 검색 (한글 + 영문)</label>
-      <input type="text" id="searchInput" placeholder="예: 에틸렌, Ethylene">
+      <label for="searchInput">🔎 MSDS 검색 (한글 + 영문)</label>
+      <input type="text" id="searchInput" placeholder="예: A-3, H-14, IRN">
     </div>
 
     <div id="mainMenu">
       <div class="category-grid">
         <div class="card" onclick="showSection('paint')">
           <h3>도료 MSDS</h3>
-          <p>도료 관련 MSDS 목록</p>
+          <p>도장 관련 MSDS 목록</p>
         </div>
+
         <div class="card" onclick="showSection('welding')">
           <h3>용접재 MSDS</h3>
           <p>용접재 관련 MSDS 목록</p>
         </div>
+
         <div class="card" onclick="showSection('etc')">
           <h3>그외 MSDS</h3>
           <p>기타 MSDS 목록</p>
@@ -147,7 +217,9 @@
       <button class="back-btn" onclick="goHome()">← 목록으로</button>
       <h2>도료 MSDS</h2>
       <div class="file-list">
-        <a href="paint/ethylene_msds.pdf" target="_blank" class="item" data-name="에틸렌 ethylene">에틸렌_MSDS</a>
+        <a href="paint/파일명.pdf" target="_blank" class="item" data-name="파일명 paint">
+          파일명
+        </a>
       </div>
     </div>
 
@@ -155,7 +227,11 @@
       <button class="back-btn" onclick="goHome()">← 목록으로</button>
       <h2>용접재 MSDS</h2>
       <div class="file-list">
-        <a href="welding/ethylene_msds.pdf" target="_blank" class="item" data-name="에틸렌 ethylene">에틸렌_MSDS</a>
+        <a href="welding/A-3.pdf" target="_blank" class="item" data-name="A-3 a-3">A-3</a>
+        <a href="welding/H-14.pdf" target="_blank" class="item" data-name="H-14 h-14">H-14</a>
+        <a href="welding/IRN.pdf" target="_blank" class="item" data-name="IRN irn">IRN</a>
+        <a href="welding/S-787TB.pdf" target="_blank" class="item" data-name="S-787TB s-787tb">S-787TB</a>
+        <a href="welding/SC-71LH.pdf" target="_blank" class="item" data-name="SC-71LH sc-71lh">SC-71LH</a>
       </div>
     </div>
 
@@ -163,11 +239,15 @@
       <button class="back-btn" onclick="goHome()">← 목록으로</button>
       <h2>그외 MSDS</h2>
       <div class="file-list">
-        <a href="etc/ethylene_msds.pdf" target="_blank" class="item" data-name="에틸렌 ethylene">에틸렌_MSDS</a>
+        <a href="etc/파일명.pdf" target="_blank" class="item" data-name="파일명 etc">
+          파일명
+        </a>
       </div>
     </div>
 
     <div id="emptyMsg" class="empty">검색 결과가 없습니다.</div>
+
+    <div class="footer">HYUNDAI-HIMS Pohang Plant MSDS</div>
   </div>
 
   <script>
@@ -202,6 +282,7 @@
       items.forEach(item => {
         const name = item.dataset.name.toLowerCase();
         const match = name.includes(q);
+
         if (match) {
           item.classList.remove("hidden");
           visibleCount++;
@@ -227,6 +308,7 @@
 
     searchInput.addEventListener("input", function () {
       const hasQuery = searchInput.value.trim() !== "";
+
       if (hasQuery) {
         mainMenu.style.display = "none";
         sections.forEach(sectionId => {
@@ -236,6 +318,7 @@
         goHome();
         return;
       }
+
       runSearch();
     });
 
@@ -243,7 +326,7 @@
       sections.forEach(sectionId => {
         const list = document.querySelector("#" + sectionId + " .file-list");
         const links = Array.from(list.querySelectorAll(".item"));
-        links.sort((a, b) => a.textContent.localeCompare(b.textContent, "ko"));
+        links.sort((a, b) => a.textContent.trim().localeCompare(b.textContent.trim(), "ko"));
         links.forEach(link => list.appendChild(link));
       });
     }
