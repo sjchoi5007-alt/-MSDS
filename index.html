@@ -1,218 +1,397 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>현대힘스 포항공장부 MSDS</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>현대힘스 포항공장부 MSDS</title>
+  <style>
+    * { box-sizing: border-box; }
 
-<style>
+    body {
+      margin: 0;
+      font-family: "Malgun Gothic", Arial, sans-serif;
+      background: #f4f7f9;
+      color: #1f2937;
+    }
 
-body{
-margin:0;
-font-family:Arial;
-background:#f4f7f9;
-}
+    .header {
+      background: linear-gradient(135deg, #0f3d75, #14532d);
+      color: white;
+      padding: 26px 16px;
+      text-align: center;
+    }
 
-.header{
-background:#0f3d75;
-color:white;
-text-align:center;
-padding:25px;
-}
+    .header h1 {
+      margin: 0 0 8px 0;
+      font-size: 28px;
+    }
 
-.container{
-max-width:1100px;
-margin:auto;
-padding:20px;
-}
+    .header p {
+      margin: 0;
+      font-size: 15px;
+    }
 
-.card{
-background:white;
-padding:20px;
-border-radius:10px;
-margin-bottom:10px;
-cursor:pointer;
-box-shadow:0 2px 6px rgba(0,0,0,0.1);
-}
+    .wrap {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 20px;
+    }
 
-.card:hover{
-background:#eef6ff;
-}
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+    }
 
-.search{
-margin-bottom:15px;
-}
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      border-top: 5px solid #0f766e;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
 
-input{
-width:100%;
-padding:12px;
-font-size:16px;
-border-radius:8px;
-border:1px solid #ccc;
-}
+    .card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 14px rgba(0,0,0,0.12);
+    }
 
-.file-list a{
-display:block;
-padding:10px;
-margin-bottom:8px;
-background:#f8fafc;
-border-radius:6px;
-text-decoration:none;
-color:#000;
-}
+    .card h3 {
+      margin: 0 0 8px 0;
+      font-size: 20px;
+    }
 
-.file-list a:hover{
-background:#e3f2fd;
-}
+    .card p {
+      margin: 0;
+      color: #475569;
+      font-size: 14px;
+    }
 
-.back{
-margin-bottom:15px;
-background:#0f766e;
-color:white;
-border:none;
-padding:10px;
-border-radius:6px;
-cursor:pointer;
-}
+    .section {
+      display: none;
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      margin-top: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
 
-</style>
+    .section h2 {
+      margin: 0 0 8px 0;
+      font-size: 24px;
+    }
 
+    .count {
+      color: #64748b;
+      font-size: 13px;
+      margin-bottom: 16px;
+    }
+
+    .search-box {
+      background: white;
+      padding: 16px;
+      border-radius: 12px;
+      margin-bottom: 16px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      border-left: 6px solid #0f766e;
+    }
+
+    .search-box label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: bold;
+      font-size: 15px;
+    }
+
+    .search-box input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+
+    .search-box input:focus {
+      outline: none;
+      border-color: #0f766e;
+      box-shadow: 0 0 0 3px rgba(15,118,110,0.15);
+    }
+
+    .back-btn {
+      display: inline-block;
+      margin-bottom: 16px;
+      background: #0f766e;
+      color: white;
+      border: none;
+      padding: 10px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      margin-right: 8px;
+    }
+
+    .back-btn:hover {
+      background: #115e59;
+    }
+
+    .file-list a {
+      display: block;
+      text-decoration: none;
+      color: #111827;
+      background: #f8fafc;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      padding: 12px 14px;
+      margin-bottom: 10px;
+      font-weight: 600;
+      transition: background 0.15s ease, border-color 0.15s ease;
+      word-break: break-word;
+    }
+
+    .file-list a:hover {
+      background: #eef6ff;
+      border-color: #93c5fd;
+    }
+
+    .empty {
+      display: none;
+      padding: 16px;
+      margin-top: 16px;
+      background: #fff7ed;
+      border: 1px solid #fdba74;
+      border-radius: 10px;
+      color: #9a3412;
+      text-align: center;
+      font-weight: 600;
+    }
+
+    .loading {
+      color: #475569;
+      padding: 8px 0 14px;
+      font-size: 14px;
+      text-align: center;
+    }
+
+    .footer {
+      text-align: center;
+      color: #64748b;
+      font-size: 12px;
+      padding: 24px 16px 10px;
+    }
+
+    @media (max-width: 640px) {
+      .header h1 {
+        font-size: 22px;
+      }
+
+      .section h2 {
+        font-size: 20px;
+      }
+    }
+  </style>
 </head>
-
 <body>
+  <div class="header">
+    <h1>현대힘스 포항공장부 MSDS</h1>
+    <p>원하는 MSDS를 검색하여 확인하세요</p>
+  </div>
 
-<div class="header">
-<h1>현대힘스 포항공장부 MSDS</h1>
-<p>원하는 MSDS를 검색하여 확인하세요</p>
-</div>
+  <div class="wrap">
+    <!-- 홈 -->
+    <div id="homeView">
+      <div class="card-grid">
+        <div class="card" onclick="openMain('paint')">
+          <h3>도료 MSDS</h3>
+          <p>제조사별 도료 MSDS</p>
+        </div>
 
-<div class="container">
+        <div class="card" onclick="openMain('welding')">
+          <h3>용접재 MSDS</h3>
+          <p>용접재 / 용접보조재 / 가우징봉</p>
+        </div>
 
-<div id="home">
+        <div class="card" onclick="openMain('etc')">
+          <h3>그외 MSDS</h3>
+          <p>기타 MSDS</p>
+        </div>
+      </div>
+    </div>
 
-<div class="card" onclick="openMenu('paint')">
-<h3>도료 MSDS</h3>
-</div>
+    <!-- 서브 메뉴 -->
+    <div id="subMenuSection" class="section">
+      <button class="back-btn" onclick="goHome()">← 홈으로</button>
+      <h2 id="subMenuTitle">목록</h2>
+      <div class="card-grid" id="subMenuGrid"></div>
+    </div>
 
-<div class="card" onclick="openMenu('welding')">
-<h3>용접재 MSDS</h3>
-</div>
+    <!-- 파일 목록 -->
+    <div id="fileSection" class="section">
+      <button class="back-btn" onclick="goBackToSubMenu()">← 이전</button>
 
-<div class="card" onclick="openMenu('etc')">
-<h3>그외 MSDS</h3>
-</div>
+      <div class="search-box">
+        <label for="fileSearch">🔎 MSDS 검색</label>
+        <input type="text" id="fileSearch" placeholder="파일명 검색">
+      </div>
 
-</div>
+      <h2 id="fileTitle">MSDS 목록</h2>
+      <div class="count" id="fileCount"></div>
+      <div class="file-list" id="fileList"></div>
+      <div class="empty" id="fileEmpty">검색 결과가 없습니다.</div>
+    </div>
 
+    <div id="loadingMsg" class="loading">파일 목록 불러오는 중...</div>
 
-<div id="menu" style="display:none">
+    <div class="footer">HYUNDAI-HIMS Pohang Plant MSDS</div>
+  </div>
 
-<button class="back" onclick="goHome()">← 목록</button>
+  <script>
+    const OWNER = "sjchoi5007-alt";
+    const REPO = "-MSDS";
 
-<div class="search">
-<input type="text" id="searchInput" placeholder="MSDS 검색">
-</div>
+    let currentMain = "";
+    let currentSubPath = "";
+    let currentFiles = [];
 
-<div id="subMenu"></div>
+    function apiUrl(path) {
+      return `https://api.github.com/repos/${OWNER}/${encodeURIComponent(REPO)}/contents/${path}`;
+    }
 
-<div class="file-list" id="fileList"></div>
+    function displayName(filename) {
+      return filename.replace(/\.pdf$/i, "");
+    }
 
-</div>
+    function sortByName(arr) {
+      return arr.sort((a, b) => a.name.localeCompare(b.name, "ko"));
+    }
 
-</div>
+    async function fetchFolder(path) {
+      const res = await fetch(apiUrl(path));
+      if (!res.ok) throw new Error(path + " 불러오기 실패");
+      return await res.json();
+    }
 
-<script>
+    function goHome() {
+      document.getElementById("homeView").style.display = "block";
+      document.getElementById("subMenuSection").style.display = "none";
+      document.getElementById("fileSection").style.display = "none";
+      document.getElementById("fileSearch").value = "";
+      currentMain = "";
+      currentSubPath = "";
+      currentFiles = [];
+    }
 
-const owner="sjchoi5007-alt"
-const repo="-MSDS"
+    function goBackToSubMenu() {
+      document.getElementById("fileSection").style.display = "none";
+      document.getElementById("subMenuSection").style.display = "block";
+      document.getElementById("fileSearch").value = "";
+    }
 
-let currentPath=""
+    async function openMain(mainFolder) {
+      currentMain = mainFolder;
 
-function goHome(){
+      document.getElementById("homeView").style.display = "none";
+      document.getElementById("fileSection").style.display = "none";
+      document.getElementById("subMenuSection").style.display = "block";
 
-document.getElementById("menu").style.display="none"
-document.getElementById("home").style.display="block"
+      const titleMap = {
+        paint: "도료 MSDS",
+        welding: "용접재 MSDS",
+        etc: "그외 MSDS"
+      };
 
-}
+      document.getElementById("subMenuTitle").textContent = titleMap[mainFolder] || "목록";
+      document.getElementById("subMenuGrid").innerHTML = "";
+      document.getElementById("loadingMsg").style.display = "block";
 
-function openMenu(folder){
+      try {
+        const data = await fetchFolder(mainFolder);
+        const dirs = data.filter(item => item.type === "dir");
+        const pdfs = data.filter(item => item.type === "file" && /\.pdf$/i.test(item.name));
 
-document.getElementById("home").style.display="none"
-document.getElementById("menu").style.display="block"
+        const grid = document.getElementById("subMenuGrid");
+        grid.innerHTML = "";
 
-currentPath=folder
+        sortByName(dirs).forEach(dir => {
+          const div = document.createElement("div");
+          div.className = "card";
+          div.innerHTML = `<h3>${dir.name}</h3><p>폴더 열기</p>`;
+          div.onclick = () => openSubFolder(`${mainFolder}/${dir.name}`, dir.name);
+          grid.appendChild(div);
+        });
 
-loadFolder(folder)
+        // 하위폴더 없는 경우 pdf 직접 표시
+        if (dirs.length === 0 && pdfs.length > 0) {
+          openFileList(mainFolder, titleMap[mainFolder] || mainFolder);
+        }
 
-}
+      } catch (e) {
+        document.getElementById("subMenuGrid").innerHTML = `<div class="empty" style="display:block;">폴더를 불러오지 못했습니다.</div>`;
+      } finally {
+        document.getElementById("loadingMsg").style.display = "none";
+      }
+    }
 
-async function loadFolder(path){
+    async function openSubFolder(path, title) {
+      currentSubPath = path;
+      openFileList(path, title);
+    }
 
-const url=`https://api.github.com/repos/${owner}/${repo}/contents/${path}`
+    async function openFileList(path, title) {
+      document.getElementById("subMenuSection").style.display = "none";
+      document.getElementById("fileSection").style.display = "block";
+      document.getElementById("fileTitle").textContent = title;
+      document.getElementById("fileSearch").value = "";
+      document.getElementById("loadingMsg").style.display = "block";
 
-const res=await fetch(url)
-const data=await res.json()
+      try {
+        const data = await fetchFolder(path);
+        currentFiles = sortByName(
+          data.filter(item => item.type === "file" && /\.pdf$/i.test(item.name))
+              .map(item => ({
+                name: item.name,
+                download_url: item.download_url
+              }))
+        );
+        renderFiles("");
+      } catch (e) {
+        currentFiles = [];
+        renderFiles("");
+      } finally {
+        document.getElementById("loadingMsg").style.display = "none";
+      }
+    }
 
-const subMenu=document.getElementById("subMenu")
-const fileList=document.getElementById("fileList")
+    function renderFiles(keyword) {
+      const list = document.getElementById("fileList");
+      const count = document.getElementById("fileCount");
+      const empty = document.getElementById("fileEmpty");
 
-subMenu.innerHTML=""
-fileList.innerHTML=""
+      list.innerHTML = "";
 
-data.forEach(item=>{
+      const filtered = currentFiles.filter(file =>
+        file.name.toLowerCase().includes(keyword.toLowerCase())
+      );
 
-if(item.type==="dir"){
+      filtered.forEach(file => {
+        const a = document.createElement("a");
+        a.href = file.download_url;
+        a.target = "_blank";
+        a.rel = "noopener noreferrer";
+        a.textContent = displayName(file.name);
+        list.appendChild(a);
+      });
 
-const div=document.createElement("div")
+      count.textContent = `총 ${filtered.length}건`;
+      empty.style.display = filtered.length === 0 ? "block" : "none";
+    }
 
-div.className="card"
-div.innerText=item.name
+    document.getElementById("fileSearch").addEventListener("input", function () {
+      renderFiles(this.value);
+    });
 
-div.onclick=()=>loadFolder(path+"/"+item.name)
-
-subMenu.appendChild(div)
-
-}
-
-if(item.name.endsWith(".pdf")){
-
-const a=document.createElement("a")
-
-a.href=item.download_url
-a.target="_blank"
-a.innerText=item.name.replace(".pdf","")
-
-fileList.appendChild(a)
-
-}
-
-})
-
-}
-
-document.getElementById("searchInput").addEventListener("input",function(){
-
-const keyword=this.value.toLowerCase()
-
-const items=document.querySelectorAll("#fileList a")
-
-items.forEach(item=>{
-
-if(item.innerText.toLowerCase().includes(keyword)){
-
-item.style.display="block"
-
-}else{
-
-item.style.display="none"
-
-}
-
-})
-
-})
-
-</script>
-
+    document.getElementById("loadingMsg").style.display = "none";
+  </script>
 </body>
 </html>
