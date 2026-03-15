@@ -90,7 +90,7 @@
     }
 
     .search-box {
-      background: white;
+      background: #ffffff;
       padding: 16px;
       border-radius: 12px;
       margin-bottom: 16px;
@@ -174,6 +174,23 @@
       text-align: center;
     }
 
+    .breadcrumb {
+      font-size: 13px;
+      color: #64748b;
+      margin-bottom: 10px;
+    }
+
+    .result-tag {
+      display: inline-block;
+      margin-left: 8px;
+      padding: 3px 8px;
+      font-size: 12px;
+      border-radius: 999px;
+      background: #e5f3ff;
+      color: #0f3d75;
+      border: 1px solid #bfdbfe;
+    }
+
     .footer {
       text-align: center;
       color: #64748b;
@@ -222,16 +239,36 @@
     <!-- 서브 메뉴 -->
     <div id="subMenuSection" class="section">
       <button class="back-btn" onclick="goHome()">← 홈으로</button>
+
+      <div class="search-box">
+        <label for="subMenuSearch" id="subMenuSearchLabel">🔎 폴더 검색</label>
+        <input type="text" id="subMenuSearch" placeholder="폴더명 검색">
+      </div>
+
+      <div class="search-box">
+        <label for="globalFileSearch" id="globalFileSearchLabel">🔎 전체 파일 검색</label>
+        <input type="text" id="globalFileSearch" placeholder="제품명 또는 파일명 검색">
+      </div>
+
       <h2 id="subMenuTitle">목록</h2>
+      <div class="count" id="subMenuCount"></div>
       <div class="card-grid" id="subMenuGrid"></div>
+      <div class="empty" id="subMenuEmpty">폴더 검색 결과가 없습니다.</div>
+
+      <h2 style="margin-top:28px;">통합 검색 결과</h2>
+      <div class="count" id="globalFileCount"></div>
+      <div class="file-list" id="globalFileList"></div>
+      <div class="empty" id="globalFileEmpty">파일 검색 결과가 없습니다.</div>
     </div>
 
     <!-- 파일 목록 -->
     <div id="fileSection" class="section">
       <button class="back-btn" onclick="goBackToSubMenu()">← 이전</button>
 
+      <div class="breadcrumb" id="breadcrumb"></div>
+
       <div class="search-box">
-        <label for="fileSearch">🔎 MSDS 검색</label>
+        <label for="fileSearch" id="searchLabel">🔎 MSDS 검색</label>
         <input type="text" id="fileSearch" placeholder="파일명 검색">
       </div>
 
@@ -251,11 +288,22 @@
     const REPO = "-MSDS";
 
     let currentMain = "";
-    let currentSubPath = "";
     let currentFiles = [];
+    let currentDirs = [];
+    let currentRecursiveFiles = [];
+
+    const titleMap = {
+      paint: "도료 MSDS",
+      welding: "용접재 MSDS",
+      etc: "그외 MSDS"
+    };
 
     function apiUrl(path) {
       return `https://api.github.com/repos/${OWNER}/${encodeURIComponent(REPO)}/contents/${path}`;
+    }
+
+    function treeUrl() {
+      return `https://api.github.com/repos/${OWNER}/${encodeURIComponent(REPO)}/git/trees/main?recursive=1`;
     }
 
     function displayName(filename) {
@@ -272,20 +320,102 @@
       return await res.json();
     }
 
+    async function fetchRecursiveFiles(baseFolder) {
+      const res = await fetch(treeUrl());
+      if (!res.ok) throw new Error("전체 파일 목록 불러오기 실패");
+      const data = await res.json();
+
+      return data.tree
+        .filter(item =>
+          item.type === "blob" &&
+          item.path.startsWith(baseFolder + "/") &&
+          item.path.toLowerCase().endsWith(".pdf")
+        )
+        .map(item => {
+          const parts = item.path.split("/");
+          const folderName = parts.length >= 3 ? parts[1] : baseFolder;
+          return {
+            name: parts[parts.length - 1],
+            folder: folderName,
+            path: item.path,
+            url: `https://raw.githubusercontent.com/${OWNER}/${REPO}/main/${encodeURIComponent(item.path).replace(/%2F/g, "/")}`
+          };
+        })
+        .sort((a, b) => a.name.localeCompare(b.name, "ko"));
+    }
+
+    function setLoading(show, message = "파일 목록 불러오는 중...") {
+      const el = document.getElementById("loadingMsg");
+      el.textContent = message;
+      el.style.display = show ? "block" : "none";
+    }
+
     function goHome() {
       document.getElementById("homeView").style.display = "block";
       document.getElementById("subMenuSection").style.display = "none";
       document.getElementById("fileSection").style.display = "none";
+
+      document.getElementById("subMenuSearch").value = "";
+      document.getElementById("globalFileSearch").value = "";
       document.getElementById("fileSearch").value = "";
+
       currentMain = "";
-      currentSubPath = "";
       currentFiles = [];
+      currentDirs = [];
+      currentRecursiveFiles = [];
     }
 
     function goBackToSubMenu() {
       document.getElementById("fileSection").style.display = "none";
       document.getElementById("subMenuSection").style.display = "block";
       document.getElementById("fileSearch").value = "";
+    }
+
+    function renderSubMenu(keyword) {
+      const grid = document.getElementById("subMenuGrid");
+      const empty = document.getElementById("subMenuEmpty");
+      const count = document.getElementById("subMenuCount");
+
+      grid.innerHTML = "";
+
+      const filtered = currentDirs.filter(dir =>
+        dir.name.toLowerCase().includes(keyword.toLowerCase())
+      );
+
+      filtered.forEach(dir => {
+        const div = document.createElement("div");
+        div.className = "card";
+        div.innerHTML = `<h3>${dir.name}</h3><p>폴더 열기</p>`;
+        div.onclick = () => openSubFolder(`${currentMain}/${dir.name}`, dir.name);
+        grid.appendChild(div);
+      });
+
+      count.textContent = `총 ${filtered.length}건`;
+      empty.style.display = filtered.length === 0 ? "block" : "none";
+    }
+
+    function renderGlobalFiles(keyword) {
+      const list = document.getElementById("globalFileList");
+      const count = document.getElementById("globalFileCount");
+      const empty = document.getElementById("globalFileEmpty");
+
+      list.innerHTML = "";
+
+      const filtered = currentRecursiveFiles.filter(file =>
+        file.name.toLowerCase().includes(keyword.toLowerCase())
+      );
+
+      filtered.forEach(file => {
+        const a = document.createElement("a");
+        a.href = file.url;
+        a.target = "_blank";
+        a.rel = "noopener noreferrer";
+        a.innerHTML = `${displayName(file.name)} <span class="result-tag">${file.folder}</span>`;
+        list.appendChild(a);
+      });
+
+      count.textContent = `총 ${filtered.length}건`;
+      empty.style.display = filtered.length === 0 ? "block" : "none";
     }
 
     async function openMain(mainFolder) {
@@ -295,46 +425,50 @@
       document.getElementById("fileSection").style.display = "none";
       document.getElementById("subMenuSection").style.display = "block";
 
-      const titleMap = {
-        paint: "도료 MSDS",
-        welding: "용접재 MSDS",
-        etc: "그외 MSDS"
-      };
-
       document.getElementById("subMenuTitle").textContent = titleMap[mainFolder] || "목록";
+      document.getElementById("subMenuSearchLabel").textContent = `🔎 ${titleMap[mainFolder]} 폴더 검색`;
+      document.getElementById("globalFileSearchLabel").textContent = `🔎 ${titleMap[mainFolder]} 전체 파일 검색`;
+
+      document.getElementById("subMenuSearch").value = "";
+      document.getElementById("globalFileSearch").value = "";
+
       document.getElementById("subMenuGrid").innerHTML = "";
-      document.getElementById("loadingMsg").style.display = "block";
+      document.getElementById("globalFileList").innerHTML = "";
+
+      setLoading(true);
 
       try {
-        const data = await fetchFolder(mainFolder);
-        const dirs = data.filter(item => item.type === "dir");
-        const pdfs = data.filter(item => item.type === "file" && /\.pdf$/i.test(item.name));
+        const [folderData, recursiveFiles] = await Promise.all([
+          fetchFolder(mainFolder),
+          fetchRecursiveFiles(mainFolder)
+        ]);
 
-        const grid = document.getElementById("subMenuGrid");
-        grid.innerHTML = "";
+        const dirs = sortByName(folderData.filter(item => item.type === "dir"));
+        const pdfs = sortByName(folderData.filter(item => item.type === "file" && /\.pdf$/i.test(item.name)));
 
-        sortByName(dirs).forEach(dir => {
-          const div = document.createElement("div");
-          div.className = "card";
-          div.innerHTML = `<h3>${dir.name}</h3><p>폴더 열기</p>`;
-          div.onclick = () => openSubFolder(`${mainFolder}/${dir.name}`, dir.name);
-          grid.appendChild(div);
-        });
+        currentDirs = dirs;
+        currentRecursiveFiles = recursiveFiles;
 
-        // 하위폴더 없는 경우 pdf 직접 표시
+        renderSubMenu("");
+        renderGlobalFiles("");
+
         if (dirs.length === 0 && pdfs.length > 0) {
           openFileList(mainFolder, titleMap[mainFolder] || mainFolder);
         }
 
+        if (dirs.length === 0 && pdfs.length === 0 && recursiveFiles.length === 0) {
+          document.getElementById("subMenuGrid").innerHTML =
+            `<div class="empty" style="display:block;">표시할 폴더나 PDF가 없습니다.</div>`;
+        }
       } catch (e) {
-        document.getElementById("subMenuGrid").innerHTML = `<div class="empty" style="display:block;">폴더를 불러오지 못했습니다.</div>`;
+        document.getElementById("subMenuGrid").innerHTML =
+          `<div class="empty" style="display:block;">폴더를 불러오지 못했습니다.</div>`;
       } finally {
-        document.getElementById("loadingMsg").style.display = "none";
+        setLoading(false);
       }
     }
 
-    async function openSubFolder(path, title) {
-      currentSubPath = path;
+    function openSubFolder(path, title) {
       openFileList(path, title);
     }
 
@@ -343,23 +477,27 @@
       document.getElementById("fileSection").style.display = "block";
       document.getElementById("fileTitle").textContent = title;
       document.getElementById("fileSearch").value = "";
-      document.getElementById("loadingMsg").style.display = "block";
+      document.getElementById("searchLabel").textContent = `🔎 ${title} 검색`;
+      document.getElementById("breadcrumb").textContent = `${titleMap[currentMain]} > ${title}`;
+
+      setLoading(true);
 
       try {
         const data = await fetchFolder(path);
         currentFiles = sortByName(
-          data.filter(item => item.type === "file" && /\.pdf$/i.test(item.name))
-              .map(item => ({
-                name: item.name,
-                download_url: item.download_url
-              }))
+          data
+            .filter(item => item.type === "file" && /\.pdf$/i.test(item.name))
+            .map(item => ({
+              name: item.name,
+              download_url: item.download_url
+            }))
         );
         renderFiles("");
       } catch (e) {
         currentFiles = [];
         renderFiles("");
       } finally {
-        document.getElementById("loadingMsg").style.display = "none";
+        setLoading(false);
       }
     }
 
@@ -387,11 +525,19 @@
       empty.style.display = filtered.length === 0 ? "block" : "none";
     }
 
+    document.getElementById("subMenuSearch").addEventListener("input", function () {
+      renderSubMenu(this.value);
+    });
+
+    document.getElementById("globalFileSearch").addEventListener("input", function () {
+      renderGlobalFiles(this.value);
+    });
+
     document.getElementById("fileSearch").addEventListener("input", function () {
       renderFiles(this.value);
     });
 
-    document.getElementById("loadingMsg").style.display = "none";
+    setLoading(false);
   </script>
 </body>
 </html>
