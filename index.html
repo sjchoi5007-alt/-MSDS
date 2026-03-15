@@ -1,403 +1,218 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>현대힘스 포항공장부 MSDS</title>
-  <style>
-    * { box-sizing: border-box; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>현대힘스 포항공장부 MSDS</title>
 
-    body {
-      margin: 0;
-      font-family: "Malgun Gothic", Arial, sans-serif;
-      background: #f4f7f9;
-      color: #1f2937;
-    }
+<style>
 
-    .header {
-      background: linear-gradient(135deg, #0f3d75, #14532d);
-      color: white;
-      padding: 26px 16px;
-      text-align: center;
-    }
+body{
+margin:0;
+font-family:Arial;
+background:#f4f7f9;
+}
 
-    .header h1 {
-      margin: 0 0 8px 0;
-      font-size: 28px;
-    }
+.header{
+background:#0f3d75;
+color:white;
+text-align:center;
+padding:25px;
+}
 
-    .header p {
-      margin: 0;
-      font-size: 15px;
-    }
+.container{
+max-width:1100px;
+margin:auto;
+padding:20px;
+}
 
-    .wrap {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 20px;
-    }
+.card{
+background:white;
+padding:20px;
+border-radius:10px;
+margin-bottom:10px;
+cursor:pointer;
+box-shadow:0 2px 6px rgba(0,0,0,0.1);
+}
 
-    .category-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 16px;
-      margin-top: 20px;
-    }
+.card:hover{
+background:#eef6ff;
+}
 
-    .card {
-      background: white;
-      border-radius: 12px;
-      padding: 20px;
-      cursor: pointer;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-      border-top: 5px solid #0f766e;
-      transition: transform 0.15s ease, box-shadow 0.15s ease;
-    }
+.search{
+margin-bottom:15px;
+}
 
-    .card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 14px rgba(0,0,0,0.12);
-    }
+input{
+width:100%;
+padding:12px;
+font-size:16px;
+border-radius:8px;
+border:1px solid #ccc;
+}
 
-    .card h3 {
-      margin: 0 0 8px 0;
-      font-size: 20px;
-    }
+.file-list a{
+display:block;
+padding:10px;
+margin-bottom:8px;
+background:#f8fafc;
+border-radius:6px;
+text-decoration:none;
+color:#000;
+}
 
-    .card p {
-      margin: 0;
-      color: #475569;
-      font-size: 14px;
-    }
+.file-list a:hover{
+background:#e3f2fd;
+}
 
-    .section {
-      display: none;
-      background: white;
-      border-radius: 12px;
-      padding: 20px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-      margin-top: 20px;
-    }
+.back{
+margin-bottom:15px;
+background:#0f766e;
+color:white;
+border:none;
+padding:10px;
+border-radius:6px;
+cursor:pointer;
+}
 
-    .section h2 {
-      margin: 0 0 8px 0;
-      font-size: 24px;
-    }
+</style>
 
-    .count {
-      color: #64748b;
-      font-size: 13px;
-      margin-bottom: 16px;
-    }
-
-    .search-box {
-      background: white;
-      padding: 16px;
-      border-radius: 12px;
-      margin-bottom: 16px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-      border-left: 6px solid #0f766e;
-    }
-
-    .search-box label {
-      display: block;
-      margin-bottom: 8px;
-      font-weight: bold;
-      font-size: 15px;
-    }
-
-    .search-box input {
-      width: 100%;
-      padding: 12px;
-      border: 1px solid #cbd5e1;
-      border-radius: 8px;
-      font-size: 16px;
-    }
-
-    .search-box input:focus {
-      outline: none;
-      border-color: #0f766e;
-      box-shadow: 0 0 0 3px rgba(15,118,110,0.15);
-    }
-
-    .back-btn {
-      display: inline-block;
-      margin-bottom: 16px;
-      background: #0f766e;
-      color: white;
-      border: none;
-      padding: 10px 14px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 14px;
-    }
-
-    .back-btn:hover {
-      background: #115e59;
-    }
-
-    .file-list a {
-      display: block;
-      text-decoration: none;
-      color: #111827;
-      background: #f8fafc;
-      border: 1px solid #e5e7eb;
-      border-radius: 8px;
-      padding: 12px 14px;
-      margin-bottom: 10px;
-      font-weight: 600;
-      transition: background 0.15s ease, border-color 0.15s ease;
-      word-break: break-word;
-    }
-
-    .file-list a:hover {
-      background: #eef6ff;
-      border-color: #93c5fd;
-    }
-
-    .empty {
-      display: none;
-      padding: 16px;
-      margin-top: 16px;
-      background: #fff7ed;
-      border: 1px solid #fdba74;
-      border-radius: 10px;
-      color: #9a3412;
-      text-align: center;
-      font-weight: 600;
-    }
-
-    .loading {
-      color: #475569;
-      padding: 8px 0 14px;
-      font-size: 14px;
-    }
-
-    .footer {
-      text-align: center;
-      color: #64748b;
-      font-size: 12px;
-      padding: 24px 16px 10px;
-    }
-
-    @media (max-width: 640px) {
-      .header h1 {
-        font-size: 22px;
-      }
-
-      .section h2 {
-        font-size: 20px;
-      }
-    }
-  </style>
 </head>
+
 <body>
-  <div class="header">
-    <h1>현대힘스 포항공장부 MSDS</h1>
-    <p>원하는 MSDS를 검색하여 확인하세요</p>
-  </div>
 
-  <div class="wrap">
-    <!-- 첫 화면 -->
-    <div id="homeView">
-      <div class="category-grid">
-        <div class="card" onclick="openSection('paint')">
-          <h3>도료 MSDS</h3>
-          <p>도료 관련 MSDS 목록</p>
-        </div>
+<div class="header">
+<h1>현대힘스 포항공장부 MSDS</h1>
+<p>원하는 MSDS를 검색하여 확인하세요</p>
+</div>
 
-        <div class="card" onclick="openSection('welding')">
-          <h3>용접재 MSDS</h3>
-          <p>용접재 관련 MSDS 목록</p>
-        </div>
+<div class="container">
 
-        <div class="card" onclick="openSection('etc')">
-          <h3>그외 MSDS</h3>
-          <p>기타 MSDS 목록</p>
-        </div>
-      </div>
-    </div>
+<div id="home">
 
-    <!-- 도료 -->
-    <div id="paintSection" class="section">
-      <button class="back-btn" onclick="goHome()">← 목록으로</button>
+<div class="card" onclick="openMenu('paint')">
+<h3>도료 MSDS</h3>
+</div>
 
-      <div class="search-box">
-        <label for="paintSearch">🔎 도료 MSDS 검색</label>
-        <input type="text" id="paintSearch" placeholder="예: KCC, HEMPEL, JOTUN, THINNER">
-      </div>
+<div class="card" onclick="openMenu('welding')">
+<h3>용접재 MSDS</h3>
+</div>
 
-      <h2>도료 MSDS</h2>
-      <div class="count" id="paintCount"></div>
-      <div class="file-list" id="paintList"></div>
-      <div class="empty" id="paintEmpty">검색 결과가 없습니다.</div>
-    </div>
+<div class="card" onclick="openMenu('etc')">
+<h3>그외 MSDS</h3>
+</div>
 
-    <!-- 용접재 -->
-    <div id="weldingSection" class="section">
-      <button class="back-btn" onclick="goHome()">← 목록으로</button>
+</div>
 
-      <div class="search-box">
-        <label for="weldingSearch">🔎 용접재 MSDS 검색</label>
-        <input type="text" id="weldingSearch" placeholder="예: A-3, H-14, IRN, SC-71LH">
-      </div>
 
-      <h2>용접재 MSDS</h2>
-      <div class="count" id="weldingCount"></div>
-      <div class="file-list" id="weldingList"></div>
-      <div class="empty" id="weldingEmpty">검색 결과가 없습니다.</div>
-    </div>
+<div id="menu" style="display:none">
 
-    <!-- 기타 -->
-    <div id="etcSection" class="section">
-      <button class="back-btn" onclick="goHome()">← 목록으로</button>
+<button class="back" onclick="goHome()">← 목록</button>
 
-      <div class="search-box">
-        <label for="etcSearch">🔎 그외 MSDS 검색</label>
-        <input type="text" id="etcSearch" placeholder="예: 물질명 또는 제품명">
-      </div>
+<div class="search">
+<input type="text" id="searchInput" placeholder="MSDS 검색">
+</div>
 
-      <h2>그외 MSDS</h2>
-      <div class="count" id="etcCount"></div>
-      <div class="file-list" id="etcList"></div>
-      <div class="empty" id="etcEmpty">검색 결과가 없습니다.</div>
-    </div>
+<div id="subMenu"></div>
 
-    <div id="loadingMsg" class="loading">파일 목록 불러오는 중...</div>
+<div class="file-list" id="fileList"></div>
 
-    <div class="footer">HYUNDAI-HIMS Pohang Plant MSDS</div>
-  </div>
+</div>
 
-  <script>
-    const OWNER = "sjchoi5007-alt";
-    const REPO = "-MSDS";
+</div>
 
-    const state = {
-      paint: [],
-      welding: [],
-      etc: []
-    };
+<script>
 
-    function apiUrl(folder) {
-      return `https://api.github.com/repos/${OWNER}/${encodeURIComponent(REPO)}/contents/${folder}`;
-    }
+const owner="sjchoi5007-alt"
+const repo="-MSDS"
 
-    function displayName(filename) {
-      return filename.replace(/\.pdf$/i, "");
-    }
+let currentPath=""
 
-    function sortKo(arr) {
-      return arr.sort((a, b) => a.name.localeCompare(b.name, "ko"));
-    }
+function goHome(){
 
-    function buildLink(file) {
-      const a = document.createElement("a");
-      a.href = file.download_url;
-      a.target = "_blank";
-      a.rel = "noopener noreferrer";
-      a.textContent = displayName(file.name);
-      return a;
-    }
+document.getElementById("menu").style.display="none"
+document.getElementById("home").style.display="block"
 
-    function renderList(folder, query = "") {
-      const list = document.getElementById(folder + "List");
-      const count = document.getElementById(folder + "Count");
-      const empty = document.getElementById(folder + "Empty");
+}
 
-      list.innerHTML = "";
+function openMenu(folder){
 
-      const filtered = state[folder].filter(file =>
-        file.name.toLowerCase().includes(query.toLowerCase())
-      );
+document.getElementById("home").style.display="none"
+document.getElementById("menu").style.display="block"
 
-      filtered.forEach(file => {
-        list.appendChild(buildLink(file));
-      });
+currentPath=folder
 
-      count.textContent = `총 ${filtered.length}건`;
-      empty.style.display = filtered.length === 0 ? "block" : "none";
-    }
+loadFolder(folder)
 
-    async function loadFolder(folder) {
-      const response = await fetch(apiUrl(folder));
-      if (!response.ok) {
-        throw new Error(folder + " 폴더를 불러오지 못했습니다.");
-      }
+}
 
-      const data = await response.json();
+async function loadFolder(path){
 
-      const pdfs = data
-        .filter(file => file.type === "file" && /\.pdf$/i.test(file.name))
-        .map(file => ({
-          name: file.name,
-          download_url: file.download_url
-        }));
+const url=`https://api.github.com/repos/${owner}/${repo}/contents/${path}`
 
-      sortKo(pdfs);
-      state[folder] = pdfs;
-      renderList(folder, "");
-    }
+const res=await fetch(url)
+const data=await res.json()
 
-    async function loadAllFolders() {
-      const loadingMsg = document.getElementById("loadingMsg");
+const subMenu=document.getElementById("subMenu")
+const fileList=document.getElementById("fileList")
 
-      try {
-        await Promise.all([
-          loadFolder("paint"),
-          loadFolder("welding"),
-          loadFolder("etc")
-        ]);
-        loadingMsg.style.display = "none";
-      } catch (error) {
-        loadingMsg.textContent = "파일 목록을 불러오지 못했습니다. 폴더명/저장소명을 확인하세요.";
-        console.error(error);
-      }
-    }
+subMenu.innerHTML=""
+fileList.innerHTML=""
 
-    function hideAllSections() {
-      document.getElementById("paintSection").style.display = "none";
-      document.getElementById("weldingSection").style.display = "none";
-      document.getElementById("etcSection").style.display = "none";
-    }
+data.forEach(item=>{
 
-    function openSection(folder) {
-      document.getElementById("homeView").style.display = "none";
-      hideAllSections();
+if(item.type==="dir"){
 
-      document.getElementById(folder + "Section").style.display = "block";
+const div=document.createElement("div")
 
-      const input = document.getElementById(folder + "Search");
-      input.value = "";
-      renderList(folder, "");
-      input.focus();
-    }
+div.className="card"
+div.innerText=item.name
 
-    function goHome() {
-      hideAllSections();
-      document.getElementById("homeView").style.display = "block";
+div.onclick=()=>loadFolder(path+"/"+item.name)
 
-      document.getElementById("paintSearch").value = "";
-      document.getElementById("weldingSearch").value = "";
-      document.getElementById("etcSearch").value = "";
+subMenu.appendChild(div)
 
-      renderList("paint", "");
-      renderList("welding", "");
-      renderList("etc", "");
-    }
+}
 
-    document.getElementById("paintSearch").addEventListener("input", function () {
-      renderList("paint", this.value);
-    });
+if(item.name.endsWith(".pdf")){
 
-    document.getElementById("weldingSearch").addEventListener("input", function () {
-      renderList("welding", this.value);
-    });
+const a=document.createElement("a")
 
-    document.getElementById("etcSearch").addEventListener("input", function () {
-      renderList("etc", this.value);
-    });
+a.href=item.download_url
+a.target="_blank"
+a.innerText=item.name.replace(".pdf","")
 
-    loadAllFolders();
-  </script>
+fileList.appendChild(a)
+
+}
+
+})
+
+}
+
+document.getElementById("searchInput").addEventListener("input",function(){
+
+const keyword=this.value.toLowerCase()
+
+const items=document.querySelectorAll("#fileList a")
+
+items.forEach(item=>{
+
+if(item.innerText.toLowerCase().includes(keyword)){
+
+item.style.display="block"
+
+}else{
+
+item.style.display="none"
+
+}
+
+})
+
+})
+
+</script>
+
 </body>
 </html>
