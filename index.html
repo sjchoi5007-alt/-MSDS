@@ -83,6 +83,13 @@
       font-size: 24px;
     }
 
+    .subheading {
+      margin: 24px 0 12px;
+      font-size: 18px;
+      font-weight: 700;
+      color: #0f172a;
+    }
+
     .count {
       color: #64748b;
       font-size: 13px;
@@ -241,21 +248,16 @@
       <button class="back-btn" onclick="goHome()">← 홈으로</button>
 
       <div class="search-box">
-        <label for="subMenuSearch" id="subMenuSearchLabel">🔎 폴더 검색</label>
-        <input type="text" id="subMenuSearch" placeholder="폴더명 검색">
-      </div>
-
-      <div class="search-box">
         <label for="globalFileSearch" id="globalFileSearchLabel">🔎 전체 파일 검색</label>
         <input type="text" id="globalFileSearch" placeholder="제품명 또는 파일명 검색">
       </div>
 
       <h2 id="subMenuTitle">목록</h2>
-      <div class="count" id="subMenuCount"></div>
-      <div class="card-grid" id="subMenuGrid"></div>
-      <div class="empty" id="subMenuEmpty">폴더 검색 결과가 없습니다.</div>
 
-      <h2 style="margin-top:28px;">통합 검색 결과</h2>
+      <div class="subheading">폴더 목록</div>
+      <div class="card-grid" id="subMenuGrid"></div>
+
+      <div class="subheading">통합 검색 결과</div>
       <div class="count" id="globalFileCount"></div>
       <div class="file-list" id="globalFileList"></div>
       <div class="empty" id="globalFileEmpty">파일 검색 결과가 없습니다.</div>
@@ -355,7 +357,6 @@
       document.getElementById("subMenuSection").style.display = "none";
       document.getElementById("fileSection").style.display = "none";
 
-      document.getElementById("subMenuSearch").value = "";
       document.getElementById("globalFileSearch").value = "";
       document.getElementById("fileSearch").value = "";
 
@@ -371,27 +372,17 @@
       document.getElementById("fileSearch").value = "";
     }
 
-    function renderSubMenu(keyword) {
+    function renderFolderCards() {
       const grid = document.getElementById("subMenuGrid");
-      const empty = document.getElementById("subMenuEmpty");
-      const count = document.getElementById("subMenuCount");
-
       grid.innerHTML = "";
 
-      const filtered = currentDirs.filter(dir =>
-        dir.name.toLowerCase().includes(keyword.toLowerCase())
-      );
-
-      filtered.forEach(dir => {
+      currentDirs.forEach(dir => {
         const div = document.createElement("div");
         div.className = "card";
         div.innerHTML = `<h3>${dir.name}</h3><p>폴더 열기</p>`;
         div.onclick = () => openSubFolder(`${currentMain}/${dir.name}`, dir.name);
         grid.appendChild(div);
       });
-
-      count.textContent = `총 ${filtered.length}건`;
-      empty.style.display = filtered.length === 0 ? "block" : "none";
     }
 
     function renderGlobalFiles(keyword) {
@@ -426,12 +417,8 @@
       document.getElementById("subMenuSection").style.display = "block";
 
       document.getElementById("subMenuTitle").textContent = titleMap[mainFolder] || "목록";
-      document.getElementById("subMenuSearchLabel").textContent = `🔎 ${titleMap[mainFolder]} 폴더 검색`;
       document.getElementById("globalFileSearchLabel").textContent = `🔎 ${titleMap[mainFolder]} 전체 파일 검색`;
-
-      document.getElementById("subMenuSearch").value = "";
       document.getElementById("globalFileSearch").value = "";
-
       document.getElementById("subMenuGrid").innerHTML = "";
       document.getElementById("globalFileList").innerHTML = "";
 
@@ -449,7 +436,7 @@
         currentDirs = dirs;
         currentRecursiveFiles = recursiveFiles;
 
-        renderSubMenu("");
+        renderFolderCards();
         renderGlobalFiles("");
 
         if (dirs.length === 0 && pdfs.length > 0) {
@@ -524,10 +511,6 @@
       count.textContent = `총 ${filtered.length}건`;
       empty.style.display = filtered.length === 0 ? "block" : "none";
     }
-
-    document.getElementById("subMenuSearch").addEventListener("input", function () {
-      renderSubMenu(this.value);
-    });
 
     document.getElementById("globalFileSearch").addEventListener("input", function () {
       renderGlobalFiles(this.value);
